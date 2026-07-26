@@ -9,6 +9,7 @@ load_dotenv()
 class BurnSightChat:
     def __init__(self):
         self.client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+        self.history = []
         
     # ---------------------------------------------------------------------------
     #           Pipeline Interfaces: Image Diagnosis & Follow-up Chat
@@ -16,19 +17,39 @@ class BurnSightChat:
     
     def diagnose(self, prediction, confidence):
         prompt_text = prompt.diagnosis_prompt(prediction, confidence)
+        self.history.append({
+            "role": "user",
+            "text": prompt_text
+        })
         
         response = self.client.models.generate_content(
             model="gemini-2.5-flash",
             contents=[prompt_text],
         )
+        self.history.append({
+        "role": "assistant",
+        "text": response.text
+    })
         return response.text
     
     def chat(self, question):
         prompt_text = prompt.chat_prompt(question)
+        self.history.append({
+            "role": "user",
+            "text": prompt_text
+        })
+        history_text = "\n".join(
+        f"{msg['role'].capitalize()}: {msg['text']}"
+        for msg in self.history
+    )
         response = self.client.models.generate_content(
             model="gemini-2.5-flash",
             contents=[prompt_text],
         )
+        self.history.append({
+            "role": "assistant",
+            "text": response.text
+        })
         return response.text
     
 #Test the chat interface
