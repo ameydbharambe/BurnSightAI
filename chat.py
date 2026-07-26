@@ -17,39 +17,21 @@ class BurnSightChat:
     
     def diagnose(self, prediction, confidence):
         prompt_text = prompt.diagnosis_prompt(prediction, confidence)
-        self.history.append({
-            "role": "user",
-            "text": prompt_text
-        })
+        self.chat = self.client.chats.create(
+            model="gemini-2.5-flash")
         
-        response = self.client.models.generate_content(
-            model="gemini-2.5-flash",
-            contents=[prompt_text],
-        )
-        self.history.append({
-        "role": "assistant",
-        "text": response.text
-    })
+        response = self.chat.send_message(prompt_text)
+        
         return response.text
     
-    def chat(self, question):
+    def followUp(self, question):
         prompt_text = prompt.chat_prompt(question)
-        self.history.append({
-            "role": "user",
-            "text": prompt_text
-        })
-        history_text = "\n".join(
-        f"{msg['role'].capitalize()}: {msg['text']}"
-        for msg in self.history
-    )
-        response = self.client.models.generate_content(
-            model="gemini-2.5-flash",
-            contents=[prompt_text],
-        )
-        self.history.append({
-            "role": "assistant",
-            "text": response.text
-        })
+        if self.chat is None:
+            self.chat = self.client.chats.create(
+                model="gemini-2.5-flash")
+        
+        response = self.chat.send_message(question)
+
         return response.text
     
 #Test the chat interface
@@ -59,7 +41,7 @@ prediction, confidence = model.predict("TestingData/First Degree Burn.jpg")
 diagnosis = chatbot.diagnose(prediction, confidence)
 print(diagnosis)
 follow_up_question = input()
-follow_up_response = chatbot.chat(follow_up_question)
+follow_up_response = chatbot.followUp(follow_up_question)
 print(follow_up_response)
 
 
