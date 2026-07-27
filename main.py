@@ -8,6 +8,7 @@ import os
 import uuid
 import shutil
 
+
 app = FastAPI(title = "BurnSightAI",
               description = "AI powered burn injury diagnosis and treatment assistant",
               version = "0.1.0")
@@ -51,3 +52,8 @@ async def diagnose(image: UploadFile = File(...)):
     finally:
         if os.path.exists(file_path):
             os.remove(file_path)
+
+@app.post("/followup")
+async def followup(question: str):
+    response = chat.followUp(question)
+    return {"response": response}

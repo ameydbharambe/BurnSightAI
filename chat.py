@@ -17,9 +17,7 @@ class BurnSightChat:
     
     def diagnose(self, prediction, confidence):
         prompt_text = prompt.diagnosis_prompt(prediction, confidence)
-        self.chat = self.client.chats.create(
-            model="gemini-2.5-flash")
-        
+        self.chat = self.client.chats.create( model="gemini-2.5-flash")
         response = self.chat.send_message(prompt_text)
         
         return response.text
@@ -27,9 +25,7 @@ class BurnSightChat:
     def followUp(self, question):
         prompt_text = prompt.chat_prompt(question)
         if self.chat is None:
-            self.chat = self.client.chats.create(
-                model="gemini-2.5-flash")
-        
+            self.chat = self.client.chats.create( model="gemini-2.5-flash")
         response = self.chat.send_message(question)
 
         return response.text
