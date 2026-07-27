@@ -43,7 +43,7 @@ async def diagnose(image: UploadFile = File(...)):
             shutil.copyfileobj(image.file, buffer)
         
         prediction, confidence = classifier.predict(file_path)
-        diagnosis = chat.diagnose(prediction, confidence)
+        diagnosis = await chat.diagnose(prediction, confidence)
         return {
             "prediction": prediction,
             "confidence": confidence,
@@ -55,5 +55,5 @@ async def diagnose(image: UploadFile = File(...)):
 
 @app.post("/followup")
 async def followup(question: str):
-    response = chat.followUp(question)
+    response = await chat.followUp(question)
     return {"response": response}
