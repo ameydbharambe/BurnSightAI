@@ -10,7 +10,7 @@ class BurnSightChat:
     def __init__(self):
         self.client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
         self.history = []
-        
+        self.chat = None
     # ---------------------------------------------------------------------------
     #           Pipeline Interfaces: Image Diagnosis & Follow-up Chat
     # ---------------------------------------------------------------------------
@@ -25,7 +25,7 @@ class BurnSightChat:
     def followUp(self, question):
         prompt_text = prompt.chat_prompt(question)
         if self.chat is None:
-            self.chat = self.client.chats.create( model="gemini-2.5-flash")
+            return "Chat cannot be initiated till diagnosis is made. Please upload an image and get a diagnosis first."
         response = self.chat.send_message(question)
 
         return response.text
