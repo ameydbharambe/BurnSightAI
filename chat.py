@@ -34,15 +34,6 @@ class BurnSightChat:
 
         return response.text
     
-#Test the chat interface
-model = BurnClassifier()
-chatbot = BurnSightChat()
-prediction, confidence = model.predict("TestingData/First Degree Burn.jpg")
-diagnosis = chatbot.diagnose(prediction, confidence)
-print(diagnosis)
-follow_up_question = input()
-follow_up_response = chatbot.followUp(follow_up_question)
-print(follow_up_response)
 
 
 
