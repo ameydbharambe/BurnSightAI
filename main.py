@@ -3,10 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from PIL import Image
 from model import BurnClassifier
 from chat import BurnSightChat
-import io 
 import os
-import uuid
-import shutil
 
 
 app = FastAPI(title = "BurnSightAI",
@@ -28,22 +25,18 @@ chat = BurnSightChat()
 def home():
     return {"message": "BurnSightAI API is running"}
 
-#The defined endpoint accepts an image file upload while model requires file path
 @app.post("/diagnose")
 async def diagnose(image: UploadFile = File(...)):
+    
+    #file_names returns just a string of name so need to create file with those contents
+    file_path = image.filename 
+    contents = await image.read()
+    with open(file_path, "wb") as f:
+        f.write(contents) 
 
-    # Create temporary file path
-    file_name = f"temp_{uuid.uuid4()}.jpg"
-    file_path = os.path.join("temporary", file_name)
-
-    # Create a temporary folder and save the img to folder 
-    os.makedirs("temporary", exist_ok=True)
-    try:
-        with open(file_path, "wb") as buffer:
-            shutil.copyfileobj(image.file, buffer)
-        
+    try:      
         prediction, confidence = classifier.predict(file_path)
-        diagnosis = await chat.diagnose(prediction, confidence)
+        diagnosis = chat.diagnose(prediction, confidence)
         return {
             "prediction": prediction,
             "confidence": confidence,
@@ -54,6 +47,6 @@ async def diagnose(image: UploadFile = File(...)):
             os.remove(file_path)
 
 @app.post("/followup")
-async def followup(question: str):
-    response = await chat.followUp(question)
+def followup(question: str):
+    response = chat.followUp(question)
     return {"response": response}

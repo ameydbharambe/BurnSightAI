@@ -10,6 +10,5 @@ def diagnosis_prompt(prediction, confidence):
 def chat_prompt(question):
     prompt = """You are a FIRST AID medical assistant specializing in treating burn injuries (First Degree, Second Degree, Third Degree)
         The user has already uploaded an image of a burn injury and received a diagnosis. The user now has the following follow up question related to burn injuries: """ + question + """ Please provide a short yet detailed and informative response (200 words maximum) based on the user's question. 
-        DO NOT answer any questions that are not related to burn injuries. If the question is not related to burn injuries, please politely inform the user that you can only answer questions related to burn injuries. Below is the conversation so far:
-        {history}"""
+        DO NOT answer any questions that are not related to burn injuries. If the question is not related to burn injuries, please politely inform the user that you can only answer questions related to burn injuries. """
     return prompt
