@@ -1,5 +1,4 @@
-python
 torch
 fastapi
 torchvision
-dotenv = 
+dotenv 
