@@ -18,8 +18,8 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-
-# Center smaller logo
+#TITLE USER INTERFACE
+#TODO: REDUCE SPACING BETWEEN LOGO AND TITLE
 col1, col2, col3 = st.columns([1.25,1, 1.25])
 with col2:
     st.image("FrontEnd/BurnSightAI Logo.png", width=700)
@@ -38,3 +38,5 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
+#TODO: ADD CHAT FEATURES
