@@ -10,9 +10,11 @@ app = FastAPI(title = "BurnSightAI",
               description = "AI powered burn injury diagnosis and treatment assistant",
               version = "0.1.0")
 
+origins = ["http://localhost:8501", "http://192.168.254.21:8501"]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
