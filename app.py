@@ -1,11 +1,5 @@
-from model import BurnClassifier
-from chat import BurnSightChat
+import streamlit as st
+import requests
 
-classifier = BurnClassifier()
-chat = BurnSightChat()
-
-'''TODO: Create a ChatGPT-like interface where user is first prompted to upload burn image and given diagnosis
-Then user is allowed to type follow up questions related to immediate treatment for injury.
-If user asks questions unrelated to burn injuries, model should inform user and close the chat
-
-'''
+st.title("BurnSightAI")
+st.write("Welcome to BurnSightAI! To begin your diagnosis please upload an image of the burn injury. Once the diagnosis is made, you can ask follow-up questions related to immediate treatment for the injury.")

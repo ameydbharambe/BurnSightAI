@@ -4,3 +4,4 @@ torchvision
 dotenv 
 Image 
 google.genai
+streamlit
