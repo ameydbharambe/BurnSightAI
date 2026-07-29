@@ -2,3 +2,5 @@ torch
 fastapi
 torchvision
 dotenv 
+Image 
+google.genai
