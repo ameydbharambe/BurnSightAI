@@ -2,13 +2,15 @@ import streamlit as st
 import requests
 
 #DEFAULT FONT = ROBOTO TODO: POTENTIAL CHANGE TO OPEN SANS
+
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;600;700&display=swap');
 
-html, body, [class*="css"]  {
-    font-family: 'Roboto', sans-serif;
+/* Change font for entire application */
+html, body, [class*="css"], [data-testid="stAppViewContainer"] * {
+    font-family: "Comic Sans MS" !important;
 }
+
 </style>
 """, unsafe_allow_html=True)
 
