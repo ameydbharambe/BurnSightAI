@@ -11,12 +11,17 @@ from datetime import datetime
 
 import requests
 import streamlit as st
+from streamlit_cookies_manager import EncryptedCookieManager
+
+import uuid
+import json
 
 # --------------------------------------------------------------------------
 # CONFIG
 # --------------------------------------------------------------------------
 BACKEND_URL = os.environ.get("BURNSIGHT_BACKEND_URL", "http://localhost:8000")
 LOGO_PATH = os.environ.get("BURNSIGHT_LOGO_PATH", "BurnSightAI_Logo.png")
+MAX_HISTORY = 3
 
 st.set_page_config(
     page_title="BurnSight AI",
@@ -44,7 +49,7 @@ st.markdown(
 
         /* Sidebar */
         section[data-testid="stSidebar"] {
-            background-color: var(--burn-red-light);
+            background-color: var(--burn-red);
             border-right: 2px solid var(--burn-red);
         }
         section[data-testid="stSidebar"] h2,
@@ -54,7 +59,7 @@ st.markdown(
 
         /* Buttons */
         div.stButton > button, div.stDownloadButton > button {
-            background-color: var(--burn-red);
+            background-color: var(--burn-red-dark);
             color: white;
             border: none;
             border-radius: 8px;
@@ -77,7 +82,7 @@ st.markdown(
         /* File uploader accent */
         section[data-testid="stFileUploaderDropzone"] {
             border: 2px dashed var(--burn-red);
-            background-color: var(--burn-red-light);
+            background-color: var(--burn-red);
         }
 
         .burnsight-badge {
@@ -194,7 +199,7 @@ def get_viewed_session():
 # SIDEBAR — past history
 # --------------------------------------------------------------------------
 with st.sidebar:
-    st.markdown("### BurnSight AI")
+    st.markdown("## BurnSight AI")
     st.markdown("<span class='burnsight-badge'>PAST INTERACTIONS</span>", unsafe_allow_html=True)
     st.markdown("---")
 
