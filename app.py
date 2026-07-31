@@ -1,5 +1,5 @@
 """
-BurnSight AI — Streamlit chat frontend
+app.py is entirely written by Claude minus a few changes in the UI
 Talks to the FastAPI backend defined in main.py (/diagnose, /followup).
 
 Run the backend first:   uvicorn main:app --reload --port 8000
@@ -132,7 +132,7 @@ def save_history():
 # --------------------------------------------------------------------------
 def init_state():
     defaults = {
-        "messages": [],        # current conversation: [{"role", "content", ["image"]}]
+        "messages": [],        # current conversation: [{"role", "content"}]
         "diagnosed": False,    # has the current session gotten a diagnosis yet?
         "diagnosis_info": None,  # {"prediction", "confidence"}
         "history" : load_history(),
