@@ -49,7 +49,9 @@ if "session" not in st.query_params:
 browser_id = st.query_params["session"]
 HISTORY_FILE = os.path.join(CHAT_HISTORY_DIR, f"history_{browser_id}.json")
 
-
+# --------------------------------------------------------------------------
+# SET PAGE CONFIG
+# --------------------------------------------------------------------------
 
 
 st.set_page_config(
