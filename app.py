@@ -231,13 +231,13 @@ def archive_current_session():
         st.session_state.history = st.session_state.history[:MAX_HISTORY]
         save_history()
 
+def reset_current_session():
     st.session_state.messages = []
     st.session_state.diagnosed = False
     st.session_state.diagnosis_info = None
     st.session_state.uploaded_image_bytes = None
     st.session_state.uploaded_image_name = None
     st.session_state.viewing_past_id = None
-
 
 def get_viewed_session():
     if st.session_state.viewing_past_id is None:
@@ -257,7 +257,7 @@ with st.sidebar:
     st.markdown("---")
 
     if st.button("➕ New Diagnosis", use_container_width=True):
-        archive_current_session()
+        reset_current_session()
         st.rerun()
 
     st.markdown("")
@@ -388,7 +388,7 @@ else:
                     )
                     st.markdown(error_reply)
                     st.session_state.messages.append({"role": "assistant", "content": error_reply})
-
+            archive_current_session()
             st.rerun()
 
     # Step 2: diagnosed — allow follow-up chat
@@ -416,3 +416,5 @@ else:
             "Note: BurnSight AI provides general guidance and is not a substitute "
             "for professional medical care. Seek emergency help for severe burns."
         )
+        
+        
