@@ -16,7 +16,6 @@ import uuid
 # UNIVERSAL CONSTANTS
 # --------------------------------------------------------------------------
 BACKEND_URL = os.environ.get("BURNSIGHT_BACKEND_URL", "http://127.0.0.1:8000")
-LOGO_PATH = os.environ.get("BURNSIGHT_LOGO_PATH", "BurnSightAI_Logo.png")
 MAX_HISTORY = 15
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 CHAT_HISTORY_DIR = os.path.join(BASE_DIR, "User Chat History")
@@ -268,9 +267,15 @@ with st.sidebar:
             with st.container():
                 st.markdown(
                     f"""
-                    <div class="history-card">
-                        <b>{session['prediction']}</b><br>
-                        <span class="ts">{session['timestamp']}</span>
+                    <div style="
+                        background-color: #ffffff; 
+                        color: #111111; 
+                        padding: 12px 16px; 
+                        border-radius: 8px; 
+                        border: 1px solid #e0e0e0;
+                    ">
+                        <b style="color: #111111;">{session['prediction']}</b><br>
+                        <span style="font-size: 12px; color: #666666;">{session['timestamp']}</span>
                     </div>
                     """,
                     unsafe_allow_html=True,
@@ -282,27 +287,17 @@ with st.sidebar:
 # --------------------------------------------------------------------------
 # HEADER
 # --------------------------------------------------------------------------
-col1, col2, col3 = st.columns([1, 1, 1])
-with col2:
-    if os.path.exists(LOGO_PATH):
-        st.image(LOGO_PATH, width=180)
-    else:
-        st.markdown(
-            "<div style='text-align:center; font-size:60px;'></div>",
-            unsafe_allow_html=True,
-        )
 
 st.markdown(
     "<h1 style='text-align:center; color:#D32F2F;'>BurnSight AI</h1>",
     unsafe_allow_html=True,
 )
-st.markdown(
+st.html(
     """
-    <p style='text-align:center; font-size:16px; color:#555;'>
-    AI-powered burn classification and first-aid guidance
+    <p style='text-align: center; font-size: 16px; color: var(--text-color); opacity: 0.8;'>
+        AI-powered burn classification and first-aid guidance
     </p>
-    """,
-    unsafe_allow_html=True,
+    """
 )
 st.markdown("---")
 
