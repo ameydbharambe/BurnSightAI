@@ -1,0 +1,18 @@
+[
+    {
+        "id": "20260730232020780538",
+        "timestamp": "Jul 30, 11:20 PM",
+        "prediction": "Second degree burn",
+        "confidence": 0.9990559220314026,
+        "messages": [
+            {
+                "role": "user",
+                "content": "Uploaded a burn image for diagnosis."
+            },
+            {
+                "role": "assistant",
+                "content": "**Classification:** Second degree burn  \n**Confidence:** 99.9%\n\nThe image you provided has been classified as a **Second-Degree Burn** with high confidence (0.999). This type of burn affects the outer layer of skin and the layer beneath it, often presenting with blisters, redness, and pain.\n\nHere's immediate first aid you can perform:\n1.  **Cool the Burn:** Immediately hold the burned area under cool (not cold or icy) running water for at least 10-20 minutes. If running water isn't available, use a clean, cool, wet compress. Do NOT use ice, butter, oils, or any home remedies.\n2.  **Remove Restrictive Items:** Gently remove any rings, watches, belts, or tight clothing from the burned area *before* swelling begins, unless they are stuck to the skin.\n3.  **Cover the Burn:** Loosely cover the burn with a sterile, non-adhesive dressing, a clean non-fluffy cloth, or plastic wrap. This helps protect the area and prevents infection. Do not pop any blisters.\n4.  **Elevate if Possible:** If the burn is on an arm or leg, elevate it above heart level to help reduce swelling.\n\nMonitor the burn for signs of infection (increased redness, swelling, pus, fever). It's advisable to consult with a healthcare professional, especially if the burn is larger than 3 inches, on a major joint, face, hands, feet, or genitals, or if pain is severe."
+            }
+        ]
+    }
+]

@@ -12,22 +12,40 @@ import json
 
 import requests
 import streamlit as st
-
+import uuid
 # --------------------------------------------------------------------------
 # CONFIG
 # --------------------------------------------------------------------------
 BACKEND_URL = os.environ.get("BURNSIGHT_BACKEND_URL", "http://localhost:8000")
 LOGO_PATH = os.environ.get("BURNSIGHT_LOGO_PATH", "BurnSightAI_Logo.png")
-HISTORY_FILE = "history.json"
 MAX_HISTORY = 15
-history = []
-
 st.set_page_config(
     page_title="BurnSight AI",
     page_icon="FrontEnd/BurnSightAI Logo.png",
     layout="wide",
     initial_sidebar_state="expanded",
 )
+
+# --------------------------------------------------------------------------
+# USE SESSION ID TO HAVE MEMORY OF CHATS PER USE
+# --------------------------------------------------------------------------
+
+# Base directory relative to this script
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+CHAT_HISTORY_DIR = os.path.join(BASE_DIR, "User Chat History")
+
+# Ensure the folder exists on disk
+os.makedirs(CHAT_HISTORY_DIR, exist_ok=True)
+
+if "session" not in st.query_params:
+    st.query_params["session"] = str(uuid.uuid4())
+
+browser_id = st.query_params["session"]
+HISTORY_FILE = os.path.join(CHAT_HISTORY_DIR, f"history_{browser_id}.json")
+
+#TODO: Clear Memory after each day
+
+
 
 # --------------------------------------------------------------------------
 # THEME — first-aid red & white
