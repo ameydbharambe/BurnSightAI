@@ -39,6 +39,7 @@ st.markdown(
             --burn-red: #D32F2F;
             --burn-red-dark: #A5241F;
             --burn-red-light: #FDEAEA;
+            --white: #FFFFFF;
         }
 
         .block-container { padding-top: 2rem; max-width: 900px; }
@@ -53,7 +54,7 @@ st.markdown(
         }
         section[data-testid="stSidebar"] h2,
         section[data-testid="stSidebar"] h3 {
-            color: var(--burn-red-dark);
+            color: var(--white);
         }
 
         /* Buttons */
@@ -222,7 +223,7 @@ def get_viewed_session():
 # --------------------------------------------------------------------------
 with st.sidebar:
     st.markdown("## BurnSight AI")
-    st.markdown("<span class='burnsight-badge'>PAST INTERACTIONS</span>", unsafe_allow_html=True)
+    st.sidebar.html("<span class='burnsight-badge' style='margin-top: -50px; display: inline-block;'>PAST INTERACTIONS</span>")
     st.markdown("---")
 
     if st.button("➕ New Diagnosis", use_container_width=True):
