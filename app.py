@@ -8,20 +8,19 @@ Then run this app:       streamlit run app.py
 
 import os
 from datetime import datetime
+import json
 
 import requests
 import streamlit as st
-from streamlit_cookies_manager import EncryptedCookieManager
-
-import uuid
-import json
 
 # --------------------------------------------------------------------------
 # CONFIG
 # --------------------------------------------------------------------------
 BACKEND_URL = os.environ.get("BURNSIGHT_BACKEND_URL", "http://localhost:8000")
 LOGO_PATH = os.environ.get("BURNSIGHT_LOGO_PATH", "BurnSightAI_Logo.png")
-MAX_HISTORY = 3
+HISTORY_FILE = "history.json"
+MAX_HISTORY = 15
+history = []
 
 st.set_page_config(
     page_title="BurnSight AI",
@@ -110,6 +109,24 @@ st.markdown(
 )
 
 # --------------------------------------------------------------------------
+# HISTORY HELPERS
+# --------------------------------------------------------------------------
+
+def load_history():
+    if os.path.exists(HISTORY_FILE):
+        try:
+            with open(HISTORY_FILE, "r") as f:
+                return json.load(f)
+        except:
+            return []
+    return []
+
+def save_history():
+    history = st.session_state.history = st.session_state.history[:MAX_HISTORY]
+    with open(HISTORY_FILE, "w") as f:
+        return json.dump(history, f, indent=4)
+
+# --------------------------------------------------------------------------
 # SESSION STATE
 # --------------------------------------------------------------------------
 def init_state():
@@ -117,7 +134,7 @@ def init_state():
         "messages": [],        # current conversation: [{"role", "content", ["image"]}]
         "diagnosed": False,    # has the current session gotten a diagnosis yet?
         "diagnosis_info": None,  # {"prediction", "confidence"}
-        "history": [],         # list of past completed sessions
+        "history" : load_history(),
         "viewing_past_id": None,  # if set, we're viewing read-only history
         "uploaded_image_bytes": None,
         "uploaded_image_name": None,
@@ -125,6 +142,7 @@ def init_state():
     for key, val in defaults.items():
         if key not in st.session_state:
             st.session_state[key] = val
+    
 
 
 init_state()
@@ -159,6 +177,9 @@ def call_followup(question: str):
 # --------------------------------------------------------------------------
 # HELPERS
 # --------------------------------------------------------------------------
+
+    
+
 def archive_current_session():
     """Push the current conversation into history and reset for a new one."""
     if st.session_state.messages:
@@ -174,9 +195,10 @@ def archive_current_session():
                     "confidence"
                 ),
                 "messages": st.session_state.messages.copy(),
-                "thumbnail": st.session_state.uploaded_image_bytes,
             },
         )
+        st.session_state.history = st.session_state.history[:MAX_HISTORY]
+        save_history()
 
     st.session_state.messages = []
     st.session_state.diagnosed = False
@@ -298,7 +320,7 @@ else:
             st.session_state.uploaded_image_name = uploaded_file.name
 
             st.session_state.messages.append(
-                {"role": "user", "content": "Uploaded a burn image for diagnosis.", "image": image_bytes}
+                {"role": "user", "content": "Uploaded a burn image for diagnosis."}
             )
 
             with st.chat_message("user", avatar="🧑"):
