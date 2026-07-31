@@ -1,7 +1,5 @@
 """
-app.py is entirely written by Claude minus a few changes in the UI
-Talks to the FastAPI backend defined in main.py (/diagnose, /followup).
-
+Important configuration steps: 
 Run the backend first:   uvicorn main:app --reload --port 8000
 Then run this app:       streamlit run app.py
 """
@@ -9,32 +7,41 @@ Then run this app:       streamlit run app.py
 import os
 from datetime import datetime
 import json
+import time
 
 import requests
 import streamlit as st
 import uuid
 # --------------------------------------------------------------------------
-# CONFIG
+# UNIVERSAL CONSTANTS
 # --------------------------------------------------------------------------
-BACKEND_URL = os.environ.get("BURNSIGHT_BACKEND_URL", "http://localhost:8000")
+BACKEND_URL = os.environ.get("BURNSIGHT_BACKEND_URL", "http://127.0.0.1:8000")
 LOGO_PATH = os.environ.get("BURNSIGHT_LOGO_PATH", "BurnSightAI_Logo.png")
 MAX_HISTORY = 15
-st.set_page_config(
-    page_title="BurnSight AI",
-    page_icon="FrontEnd/BurnSightAI Logo.png",
-    layout="wide",
-    initial_sidebar_state="expanded",
-)
-
-# --------------------------------------------------------------------------
-# USE SESSION ID TO HAVE MEMORY OF CHATS PER USE
-# --------------------------------------------------------------------------
-
-# Base directory relative to this script
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 CHAT_HISTORY_DIR = os.path.join(BASE_DIR, "User Chat History")
+browser_id = None
+HISTORY_FILE = None
+MAX_FILE_AGE = 24*60*60
+AVATAR = "FrontEnd/BurnSightAI Logo.png"
+USER = "FrontEnd/Pfp.jpg"
 
-# Ensure the folder exists on disk
+# --------------------------------------------------------------------------
+# CLEANUP OLD CHAT HISTORY EVERY DAY
+# --------------------------------------------------------------------------
+
+now = time.time()
+for filename in os.listdir(CHAT_HISTORY_DIR):
+    file_path = os.path.join(CHAT_HISTORY_DIR, filename)
+    if os.path.isfile(file_path):
+        file_age = now - os.path.getmtime(file_path)
+        if file_age > MAX_FILE_AGE:
+            os.remove(file_path)
+        
+        
+# --------------------------------------------------------------------------
+# USE SESSION ID from URL TO HAVE MEMORY OF CHATS PER USE
+# --------------------------------------------------------------------------
 os.makedirs(CHAT_HISTORY_DIR, exist_ok=True)
 
 if "session" not in st.query_params:
@@ -43,9 +50,15 @@ if "session" not in st.query_params:
 browser_id = st.query_params["session"]
 HISTORY_FILE = os.path.join(CHAT_HISTORY_DIR, f"history_{browser_id}.json")
 
-#TODO: Clear Memory after each day
 
 
+
+st.set_page_config(
+    page_title="BurnSight AI",
+    page_icon=AVATAR,
+    layout="wide",
+    initial_sidebar_state="expanded",
+)
 
 # --------------------------------------------------------------------------
 # THEME — first-aid red & white
@@ -197,8 +210,6 @@ def call_followup(question: str):
 # HELPERS
 # --------------------------------------------------------------------------
 
-    
-
 def archive_current_session():
     """Push the current conversation into history and reset for a new one."""
     if st.session_state.messages:
@@ -306,7 +317,7 @@ if viewed_session is not None:
         st.image(viewed_session["thumbnail"], width=220)
 
     for msg in viewed_session["messages"]:
-        with st.chat_message(msg["role"], avatar="FrontEnd/BurnSightAI Logo.png" if msg["role"] == "assistant" else "🧑"):
+        with st.chat_message(msg["role"], avatar=AVATAR if msg["role"] == "assistant" else USER):
             st.markdown(msg["content"])
 
     if st.button("⬅ Back to current session"):
@@ -316,7 +327,7 @@ if viewed_session is not None:
 else:
     # Render existing conversation
     for msg in st.session_state.messages:
-        with st.chat_message(msg["role"], avatar="FrontEnd/BurnSightAI Logo.png" if msg["role"] == "assistant" else "🧑"):
+        with st.chat_message(msg["role"], avatar=AVATAR if msg["role"] == "assistant" else USER):
             if msg.get("image"):
                 st.image(msg["image"], width=220)
             st.markdown(msg["content"])
@@ -342,11 +353,11 @@ else:
                 {"role": "user", "content": "Uploaded a burn image for diagnosis."}
             )
 
-            with st.chat_message("user", avatar="🧑"):
+            with st.chat_message("user", avatar=USER):
                 st.image(image_bytes, width=220)
                 st.markdown("Uploaded a burn image for diagnosis.")
 
-            with st.chat_message("assistant", avatar="FrontEnd/BurnSightAI Logo.png"):
+            with st.chat_message("assistant", avatar=AVATAR):
                 with st.spinner("Analyzing image..."):
                     ok, data = call_diagnose(image_bytes, uploaded_file.name)
 
@@ -388,10 +399,10 @@ else:
         question = st.chat_input("Ask a follow-up question about your diagnosis...")
         if question:
             st.session_state.messages.append({"role": "user", "content": question})
-            with st.chat_message("user", avatar="🧑"):
+            with st.chat_message("user", avatar=USER):
                 st.markdown(question)
 
-            with st.chat_message("assistant", avatar="FrontEnd/BurnSightAI Logo.png"):
+            with st.chat_message("assistant", avatar=AVATAR):
                 with st.spinner("Thinking..."):
                     ok, data = call_followup(question)
 
