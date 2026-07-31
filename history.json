@@ -1,0 +1,50 @@
+[
+    {
+        "id": "20260730170722950881",
+        "timestamp": "Jul 30, 05:07 PM",
+        "prediction": "Third degree burn",
+        "confidence": 0.9556770324707031,
+        "messages": [
+            {
+                "role": "user",
+                "content": "Uploaded a burn image for diagnosis."
+            },
+            {
+                "role": "assistant",
+                "content": "**Classification:** Third degree burn  \n**Confidence:** 95.6%\n\nBased on the image, the burn has been classified as a **Third-degree burn** with high confidence (0.95). This is a very serious injury that requires urgent professional medical attention.\n\n**Call emergency services immediately.**\n\nWhile you wait for medical help to arrive, perform the following first aid steps:\n\n1.  **Do NOT apply water, ice, or any creams/ointments** to the burn. This can worsen the injury, cause hypothermia, or introduce infection.\n2.  **Do NOT attempt to remove any clothing that is stuck to the burn.** This could cause further damage.\n3.  **Gently cover the burned area with a clean, dry, non-stick dressing, a clean sheet, or a sterile cloth.** This helps protect the burn from infection and maintain body temperature.\n4.  **Elevate the burned body part above heart level if possible**, to help reduce swelling.\n5.  **Keep the person warm and calm.** Monitor for signs of shock, such as faintness or pale skin.\n\nThird-degree burns can damage deep tissues and nerves, sometimes making them painless. Your priority is to protect the burn and ensure professional medical help is en route."
+            }
+        ]
+    },
+    {
+        "id": "20260730170704225645",
+        "timestamp": "Jul 30, 05:07 PM",
+        "prediction": "Second degree burn",
+        "confidence": 0.9361908435821533,
+        "messages": [
+            {
+                "role": "user",
+                "content": "Uploaded a burn image for diagnosis."
+            },
+            {
+                "role": "assistant",
+                "content": "**Classification:** Second degree burn  \n**Confidence:** 93.6%\n\nBased on the image classification, it appears you have a **Second-Degree Burn** with high confidence (0.936).\n\nFor immediate first aid:\n\n1.  **Cool the Burn:** Immediately place the affected area under cool (not cold) running water for at least 10-20 minutes, or apply a clean, cool, wet compress. Do NOT use ice directly, as it can cause further tissue damage.\n2.  **Remove Restrictions:** Gently remove any rings, watches, or tight clothing from the burned area *before* it starts to swell.\n3.  **Cover Loosely:** After cooling, loosely cover the burn with a sterile, non-stick bandage or a clean, dry cloth to protect it from infection.\n4.  **Avoid Blister Breaking:** Do NOT pop any blisters. They provide a natural barrier against infection and aid in healing.\n5.  **No Home Remedies:** Do not apply butter, oils, toothpaste, or other traditional remedies, as these can worsen the burn or lead to infection.\n6.  **Pain Relief:** If easily accessible, over-the-counter pain relievers like ibuprofen can help manage discomfort.\n\nMonitor the burn closely for signs of infection (increased redness, swelling, pus, fever). If the burn covers a large area, is on a sensitive body part (face, hands, feet, groin), or if pain is severe, please seek professional medical attention after these initial steps."
+            }
+        ]
+    },
+    {
+        "id": "20260730170219018148",
+        "timestamp": "Jul 30, 05:02 PM",
+        "prediction": "Second degree burn",
+        "confidence": 0.9361908435821533,
+        "messages": [
+            {
+                "role": "user",
+                "content": "Uploaded a burn image for diagnosis."
+            },
+            {
+                "role": "assistant",
+                "content": "**Classification:** Second degree burn  \n**Confidence:** 93.6%\n\nBased on the image, the classification indicates a **Second-degree burn** with high confidence (0.936). These burns typically present with redness, blistering, significant pain, and sometimes swelling.\n\nHere are immediate first aid steps you can take:\n1.  **Cool the burn:** Gently hold the affected area under cool (not cold or icy) running water for 10-20 minutes. This helps reduce pain and swelling. Do not apply ice directly.\n2.  **Remove items:** Carefully remove any jewelry or tight clothing near the burn *before* swelling begins.\n3.  **Cover the burn:** Loosely cover the burn with a sterile, non-stick dressing or a clean, lint-free cloth. This helps protect the area from infection. Do not pop any blisters.\n4.  **Elevate:** If possible, elevate the burned area above heart level to help minimize swelling.\n\nDo NOT apply butter, oils, or any home remedies. Monitor the burn for signs of infection (increased redness, swelling, pus, fever). Given the nature of second-degree burns, it is advisable to seek professional medical attention after these immediate first aid steps to ensure proper healing and prevent complications."
+            }
+        ]
+    }
+]
