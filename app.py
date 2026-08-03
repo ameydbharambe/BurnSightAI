@@ -175,6 +175,9 @@ def init_state():
     for key, val in defaults.items():
         if key not in st.session_state:
             st.session_state[key] = val
+
+    if "conversation_id" not in st.session_state:
+        st.session_state.conversation_id = str(uuid.uuid4())
     
 
 
@@ -212,24 +215,34 @@ def call_followup(question: str):
 # --------------------------------------------------------------------------
 
 def archive_current_session():
-    """Push the current conversation into history and reset for a new one."""
-    if st.session_state.messages:
-        st.session_state.history.insert(
-            0,
-            {
-                "id": datetime.now().strftime("%Y%m%d%H%M%S%f"),
-                "timestamp": datetime.now().strftime("%b %d, %I:%M %p"),
-                "prediction": (st.session_state.diagnosis_info or {}).get(
-                    "prediction", "Unclassified"
-                ),
-                "confidence": (st.session_state.diagnosis_info or {}).get(
-                    "confidence"
-                ),
-                "messages": st.session_state.messages.copy(),
-            },
-        )
-        st.session_state.history = st.session_state.history[:MAX_HISTORY]
-        save_history()
+    """Save or update the current conversation in history."""
+
+    if not st.session_state.messages:
+        return
+
+    conversation = {
+        "id": st.session_state.conversation_id,
+        "timestamp": datetime.now().strftime("%b %d, %I:%M %p"),
+        "prediction": (st.session_state.diagnosis_info or {}).get(
+            "prediction", "Unclassified"
+        ),
+        "confidence": (st.session_state.diagnosis_info or {}).get(
+            "confidence"
+        ),
+        "messages": st.session_state.messages.copy(),
+    }
+
+    # Look for an existing conversation with this ID
+    for i, conv in enumerate(st.session_state.history):
+        if conv["id"] == st.session_state.conversation_id:
+            st.session_state.history[i] = conversation
+            break
+    else:
+        # Doesn't exist yet, insert it
+        st.session_state.history.insert(0, conversation)
+
+    st.session_state.history = st.session_state.history[:MAX_HISTORY]
+    save_history()
 
 def reset_current_session():
     st.session_state.messages = []
@@ -238,6 +251,7 @@ def reset_current_session():
     st.session_state.uploaded_image_bytes = None
     st.session_state.uploaded_image_name = None
     st.session_state.viewing_past_id = None
+    st.session_state.conversation_id = str(uuid.uuid4())
 
 def get_viewed_session():
     if st.session_state.viewing_past_id is None:
@@ -388,7 +402,6 @@ else:
                     )
                     st.markdown(error_reply)
                     st.session_state.messages.append({"role": "assistant", "content": error_reply})
-            archive_current_session()
             st.rerun()
 
     # Step 2: diagnosed — allow follow-up chat
@@ -416,5 +429,6 @@ else:
             "Note: BurnSight AI provides general guidance and is not a substitute "
             "for professional medical care. Seek emergency help for severe burns."
         )
+    archive_current_session()
         
         
