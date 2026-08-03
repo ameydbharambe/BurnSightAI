@@ -3,5 +3,5 @@ __pycache__/
 *.pyc
 .vscode/
 .env
-BurnClassifierFinal.pth
+BurnClassifierTransformer.pth
 User Chat History

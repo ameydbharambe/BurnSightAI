@@ -5,5 +5,5 @@ dotenv
 Image 
 google.genai
 streamlit
-streamlit_cookies_manager
 uuid
+transformers
