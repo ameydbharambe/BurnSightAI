@@ -238,7 +238,6 @@ def archive_current_session():
             st.session_state.history[i] = conversation
             break
     else:
-        # Doesn't exist yet, insert it
         st.session_state.history.insert(0, conversation)
 
     st.session_state.history = st.session_state.history[:MAX_HISTORY]
@@ -395,6 +394,7 @@ else:
                     }
                     st.session_state.diagnosed = True
                     st.session_state.messages.append({"role": "assistant", "content": reply})
+                    #Try calling archivesession here instead of overall
                 else:
                     error_reply = (
                         "⚠️ I couldn't reach the diagnosis service. "
