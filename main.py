@@ -1,5 +1,4 @@
 from fastapi import FastAPI, UploadFile, File
-from fastapi.middleware.cors import CORSMiddleware
 from PIL import Image
 from model import BurnClassifier
 from chat import BurnSightChat
