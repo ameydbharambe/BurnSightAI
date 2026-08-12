@@ -6,4 +6,3 @@ Image
 google.genai
 streamlit
 uuid
-transformers
