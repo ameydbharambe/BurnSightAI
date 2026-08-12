@@ -10,7 +10,7 @@ load_dotenv()
 class BurnSightChat:
     def __init__(self):
         self.client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
-        self.config = types.GenerateContentConfig(temperature=0.1, tools=[types.Tool(google_search=types.GoogleSearch())])
+        self.config = types.GenerateContentConfig(temperature=0.1)
         self.chat = None
     # ---------------------------------------------------------------------------
     #           Pipeline Interfaces: Image Diagnosis & Follow-up Chat
@@ -36,8 +36,6 @@ class BurnSightChat:
         if self.chat is None:
             return "Chat cannot be initiated till diagnosis is made. Please upload an image and get a diagnosis first."
         response = self.chat.send_message(question)
-        if self.used_google_search(response):
-            return "I used Google Search to find the answer. Here is the information I found: \n " + response.text 
 
         return response.text
 
