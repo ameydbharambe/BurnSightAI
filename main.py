@@ -2,6 +2,7 @@ from fastapi import FastAPI, UploadFile, File
 from PIL import Image
 from model import BurnClassifier
 from chat import BurnSightChat
+from google import genai
 import os
 
 
@@ -15,13 +16,6 @@ chat = BurnSightChat()
 @app.get("/home")
 def home():
     return {"message": "BurnSightAI API is running"}
-
-
-import os
-from fastapi import FastAPI
-from google import genai
-
-app = FastAPI()
 
 @app.get("/test-gemini")
 def test_gemini():
