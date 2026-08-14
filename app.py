@@ -6,6 +6,7 @@ Then run this app:       streamlit run app.py
 
 import os
 from datetime import datetime
+from pathlib import Path
 import json
 import time
 
@@ -29,13 +30,19 @@ USER = "FrontEnd/Pfp.jpg"
 # CLEANUP OLD CHAT HISTORY EVERY DAY
 # --------------------------------------------------------------------------
 
+CHAT_HISTORY_DIR = Path("history")
+CHAT_HISTORY_DIR.mkdir(parents=True, exist_ok=True)
+
 now = time.time()
+
 for filename in os.listdir(CHAT_HISTORY_DIR):
-    file_path = os.path.join(CHAT_HISTORY_DIR, filename)
-    if os.path.isfile(file_path):
-        file_age = now - os.path.getmtime(file_path)
+    file_path = CHAT_HISTORY_DIR / filename
+
+    if file_path.is_file():
+        file_age = now - file_path.stat().st_mtime
+
         if file_age > MAX_FILE_AGE:
-            os.remove(file_path)
+            file_path.unlink()
         
         
 # --------------------------------------------------------------------------
