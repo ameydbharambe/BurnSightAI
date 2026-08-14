@@ -4,12 +4,13 @@ from dotenv import load_dotenv
 import os
 from model import BurnClassifier
 import prompt
+import streamlit as st
 
 load_dotenv()
 
 class BurnSightChat:
     def __init__(self):
-        self.client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+        self.client = genai.Client(st.secrets.get("GEMINI_API_KEY") or os.getenv("GEMINI_API_KEY"))
         self.config = types.GenerateContentConfig(temperature=0.1)
         self.chat = None
     # ---------------------------------------------------------------------------
