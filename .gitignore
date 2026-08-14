@@ -5,5 +5,4 @@ __pycache__/
 .env
 BurnClassifierTransformer.pth
 User Chat History
-FrontEnd/
 BurnClassifierMOBILENET.pt
