@@ -49,7 +49,7 @@ chat = get_chat()
 # CLEANUP OLD CHAT HISTORY EVERY DAY
 # --------------------------------------------------------------------------
 
-CHAT_HISTORY_DIR = Path("history")
+CHAT_HISTORY_DIR = Path("User Chat History")
 CHAT_HISTORY_DIR.mkdir(parents=True, exist_ok=True)
 
 now = time.time()
