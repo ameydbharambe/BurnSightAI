@@ -16,6 +16,31 @@ chat = BurnSightChat()
 def home():
     return {"message": "BurnSightAI API is running"}
 
+
+import os
+from fastapi import FastAPI
+from google import genai
+
+app = FastAPI()
+
+@app.get("/test-gemini")
+def test_gemini():
+    key = os.getenv("GEMINI_API_KEY")
+
+    print("Key exists:", key is not None)
+    print("Key prefix:", key[:4] if key else "NONE")
+
+    client = genai.Client(api_key=key)
+
+    response = client.models.generate_content(
+        model="gemini-2.5-flash",
+        contents="Say hello!"
+    )
+
+    print("Gemini response:", response.text)
+
+    return {"response": response.text}
+
 @app.post("/diagnose")
 async def diagnose(image: UploadFile = File(...)):
     
