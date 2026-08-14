@@ -1,7 +1,10 @@
 """
-Important configuration steps: 
-Run the backend first:   uvicorn main:app --reload --port 8000
-Then run this app:       streamlit run app.py
+Important configuration steps:
+Run this app directly:   streamlit run app.py
+
+All backend logic (image classification + Gemini-based chat) now runs
+in-process inside this file. There is no separate FastAPI service to
+start or point at anymore.
 """
 
 import os
@@ -9,14 +12,16 @@ from datetime import datetime
 from pathlib import Path
 import json
 import time
-
-import requests
-import streamlit as st
 import uuid
+
+import streamlit as st
+
+from model import BurnClassifier
+from chat import BurnSightChat
+
 # --------------------------------------------------------------------------
 # UNIVERSAL CONSTANTS
 # --------------------------------------------------------------------------
-BACKEND_URL = os.environ.get("BURNSIGHT_BACKEND_URL", "http://127.0.0.1:8000")
 MAX_HISTORY = 15
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 CHAT_HISTORY_DIR = os.path.join(BASE_DIR, "User Chat History")
@@ -25,6 +30,20 @@ HISTORY_FILE = None
 MAX_FILE_AGE = 24*60*60
 AVATAR = "FrontEnd/BurnSightAI Logo.png"
 USER = "FrontEnd/Pfp.jpg"
+
+# --------------------------------------------------------------------------
+# MODEL / CHAT — loaded once and cached across reruns
+# --------------------------------------------------------------------------
+@st.cache_resource
+def get_classifier():
+    return BurnClassifier()
+
+@st.cache_resource
+def get_chat():
+    return BurnSightChat()
+
+classifier = get_classifier()
+chat = get_chat()
 
 # --------------------------------------------------------------------------
 # CLEANUP OLD CHAT HISTORY EVERY DAY
@@ -192,28 +211,37 @@ init_state()
 
 
 # --------------------------------------------------------------------------
-# BACKEND CALLS
+# DIAGNOSIS / CHAT CALLS (in-process — no HTTP hop)
 # --------------------------------------------------------------------------
 def call_diagnose(image_bytes: bytes, filename: str):
-    """POST the image to /diagnose. Returns (ok, data_or_error)."""
+    """Run classification + diagnosis directly. Returns (ok, data_or_error)."""
+    # classifier.predict expects a file path, so write the upload to a
+    # temp file first (same approach the old /diagnose endpoint used).
+    tmp_path = os.path.join(CHAT_HISTORY_DIR, f"upload_{uuid.uuid4().hex}_{filename}")
     try:
-        files = {"image": (filename, image_bytes, "application/octet-stream")}
-        resp = requests.post(f"{BACKEND_URL}/diagnose", files=files, timeout=60)
-        resp.raise_for_status()
-        return True, resp.json()
-    except requests.exceptions.RequestException as e:
+        with open(tmp_path, "wb") as f:
+            f.write(image_bytes)
+
+        prediction, confidence = classifier.predict(tmp_path)
+        diagnosis = chat.diagnose(prediction, confidence)
+        return True, {
+            "prediction": prediction,
+            "confidence": confidence,
+            "diagnosis": diagnosis,
+        }
+    except Exception as e:
         return False, str(e)
+    finally:
+        if os.path.exists(tmp_path):
+            os.remove(tmp_path)
 
 
 def call_followup(question: str):
-    """POST a follow-up question to /followup. Returns (ok, data_or_error)."""
+    """Run a follow-up question directly. Returns (ok, data_or_error)."""
     try:
-        resp = requests.post(
-            f"{BACKEND_URL}/followup", params={"question": question}, timeout=60
-        )
-        resp.raise_for_status()
-        return True, resp.json()
-    except requests.exceptions.RequestException as e:
+        response = chat.followUp(question)
+        return True, {"response": response}
+    except Exception as e:
         return False, str(e)
 
 
@@ -437,5 +465,3 @@ else:
             "for professional medical care. Seek emergency help for severe burns."
         )
     archive_current_session()
-        
-        
