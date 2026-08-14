@@ -1,6 +1,6 @@
 ﻿# <h1 align="center">BurnSight AI</h1>
 
-BurnSight AI is a chatbot that integrates a CNN with an LLM to classify burn severity and generate first-aid recommendations respectively. Demo link will be added soon!
+BurnSight AI is a chatbot that integrates a CNN with an LLM to classify burn severity and generate first-aid recommendations respectively. See a demo [here!](https://burnsightai.streamlit.app/)
 
 ## Table of Contents
 
@@ -23,7 +23,7 @@ BurnSight AI is a chatbot that integrates a CNN with an LLM to classify burn sev
 
 ### 1.1 Motivation
 
-My motivation for working on this project started when I noticed Gemini struggling to confidently identify common injuries based on the image alone. To close this gap, I wanted to integrate an image classification model with a Gemini API such that Gemini is just given textual input of a score consisting of the classified injury and the confidence level (probability of it being that injury) where based on the inputted score, Gemini would output a recommended care plan if there was a high enough confidence score (set to be 67% though it may later change).
+My motivation for working on this project started when I noticed Gemini struggling to confidently identify common injuries based on the image alone. To close this gap, I wanted to integrate an image classification model with a Gemini API such that Gemini is just given textual input of a score consisting of the classified injury and the confidence level (probability of it being that injury) where based on the inputted score, Gemini would output a recommended care plan if there was a high enough confidence score (set to be 67% though it may later change). This is to ensure that when the model is uncertain, it does not give a potentially incorrect classification. 
 
 Originally, I wanted to build a more generalized "First-Aid" chatbot that given an image of
 an injury, it would classify the injury and give "First-Aid" type advice on how to treat it
@@ -45,22 +45,21 @@ Due to these issues, I decided to narrow down my focus to only burn injuries and
 
 ### 2.1 Tech Stack
 
-* **Frontend:** [Streamlit](https://streamlit.io/)
-* **Backend API:** [FastAPI](https://fastapi.tiangolo.com/) + [Uvicorn](https://www.uvicorn.org/)
+* **App:** [Streamlit](https://streamlit.io/)
 * **Machine Learning:** [PyTorch](https://pytorch.org/), [Transformers (Hugging Face)](https://huggingface.co/docs/transformers/index), [Torchvision](https://pytorch.org/vision/stable/index.html), 
 [Pillow (PIL)](https://python-pillow.org/):
 * **LLM:** [Google Gemini API](https://ai.google.dev/) 
 
 ### 2.2 Architecture Diagram
 
-![alt text](system.png)
+![alt text](Results/systemarchitecture.png)
 
 ### 2.3 Pipeline
 1. **Session Initialization:** When the application loads, a new session id (uuid) is created for the current session of the application. The session id remains the same if the application is reloaded. This is because each session id is unique to the application session. A new json file storing history is created for each session id.
 2. **Image Upload:** The user uploads an image of a burn the frontend. The image is only stored for classification purposes and deleted after a classification is made. 
-3. **Image Preprocessing:** Frontend sends the uploaded image to the FASTAPI backend. FastAPI backend receives the image and prepares it for the trained MOBILENET-V3 classifier. The image is resized and normalized according to the preprocessing requirements of the model. 
+3. **Image Preprocessing:** The uploaded image is passed directly to the Burn Classifier model (fine-tuned MOBILENET-V3). The image is resized and normalized according to the preprocessing requirements of the model. 
 4. **Burn Classification:** The pretrained model uses the image input to output $3$ logit values. These $3$ logit values are passed through a softmax to find the probabilities for each of the burn severities. Then the maximum probability is decided as the classification. 
-5. **LLM Processing:** The Gemini API is prompted as a medical assistant with inputs being the confidence and prediction of the pretrained model. These inputs are used to generate recommended First-Aid methods for each burn. Connected via FASTAPI to backend. 
+5. **LLM Processing:** The Gemini API is prompted as a medical assistant with inputs being the confidence and prediction of the pretrained model. These inputs are used to generate recommended First-Aid methods for each burn. 
 6. **Conversation Initialization:** After the initial diagnosis, a unique conversation id is created (uuid)(essentially anytime you open a new chat). After each chat it verifies if it belongs to an existing conversation, else it creates a new one. Each time the chat is added to json file for the respective session id history file. 
 7. **Follow-Up Questions:** The user can ask follow-up questions about the diagnosed burn. These messages are associated with the current conversation ID, allowing the application to maintain the context of the original diagnosis when generating subsequent responses. Google search was initally integrated for verification of results but later removed as it enabled the LLM to answer off-topic questions. A future fix is TBD. 
 8. **History Deletion:** When running, if a history json file is older than a day. 
@@ -100,7 +99,7 @@ Testing: {'First degree burn': 0, 'Third degree burn': 1, 'second degree burn': 
 ```
 So, if the model predicts the value $1$, it is referring to a 'Third degree' burn rather than a 'second degree burn'. 
 
-![alt text](graph.png)
+![alt text](Results/graph.png)
 
 The graph above shows the distribution of data across the different classes. As we can see it is relatively uniform suggesting an equal distribution between the different burn severities. This suggests that accuracy is a good metric to evaluate the performance of the model. 
 
@@ -121,7 +120,7 @@ Mathematically, we can verify that RoboFlow is correct.
 
 The images are of dimensions $224\times224$ which is great because most pretrained models are trained on IMAGENET which uses the $224\times224$ image size. Below are some examples of how the data looks like.
 
-![alt text](data.png)
+![alt text](Results/data.png)
 
 ## 3.3 Model Selection
 
@@ -166,7 +165,7 @@ Therefore, we go to compare model performance against the next metric: confusion
 
 | ResNet-50 | MOBILENET-V3 |
 | :---: | :---: |
-| ![alt text](resnet50confusionmatrix.png) | ![alt text](mobilenetconfusionmatrix.png) |
+| ![alt text](Results/resnet50confusionmatrix.png) | ![alt text](Results/mobilenetconfusionmatrix.png) |
 
 When comparing the performance on the test dataset, the difference is almost negligible. For example, ResNet-50 correctly classifies $\frac{105+96+86}{325}\times100=88.3$ percent while MOBILENET-V3 correctly classifies $\frac{99+102+91}{325}\times100=89.8$ percent. The difference in accuracy is just $(99+102+91)-(105+96+86)=5$ images which is not a major difference. 
 
