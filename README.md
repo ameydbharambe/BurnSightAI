@@ -193,7 +193,7 @@ Another major limitation is a lack of spatial awareness. The LLM is only fed the
 1. **Integration of a Database:** Currently our application depends on using JSON files for each session to store history. On a large scale, this would not be efficient because managing multiple files would easily get complicated. 
 2. **Larger & Diverse Dataset:** Most likely will require manual labeling due to limited available burn severity datasets. Right now, we were unable to easily choose a model due to the differences in model performance being only 5 images in the worst cases scenario. A more diverse dataset would allow for better generalization on various scenarios. The folder [Limit Testing](./limit%20testing/) contains some of these extreme cases that were tested on this model. 
 3. **Use of Retrieval-Augmented Generation (RAG):**  The LLM just uses it's pretrained knowledge. For basic first-aid scenarios this is okay. However, for rare cases such as burns on sensitive body parts, the LLM might hallucinate. If Gemini ever hallucinates the user may use the incorrect treatment. To prevent this, we can implement RAG so that we can provide articles from sources such as the Mayo Clinic for Gemini to reference before providing an output. 
-4. **Streamlit Latency:** Due to using the community cloud, if the app is not used for a certain period of days, it is shut down. 
+4. **Streamlit Latency:** Since the app was hosted on Streamlit's free-tier Community Cloud, it could shut down after a period of inactivity, resulting in a cold start and increased initial latency. A potential solution without additional cost is to periodically send requests to keep the app in a hot state, while also caching the model to reduce startup time.
 
 
 
