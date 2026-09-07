@@ -19,6 +19,7 @@ BurnSight AI is a chatbot that integrates a CNN with an LLM to classify burn sev
 - [4. Limitations & Future Work](#4-limitations--future-work)
   - [4.1 Limitations](#41-limitations)
   - [4.2 Future Work](#42-future-work)
+  - [4.3 Contributing to the Repo](#43-contributing-to-the-repo)
 ## 1. Introduction
 
 ### 1.1 Motivation
@@ -194,8 +195,6 @@ Another major limitation is a lack of spatial awareness. The LLM is only fed the
 2. **Larger & Diverse Dataset:** Most likely will require manual labeling due to limited available burn severity datasets. Right now, we were unable to easily choose a model due to the differences in model performance being only 5 images in the worst cases scenario. A more diverse dataset would allow for better generalization on various scenarios. The folder [Limit Testing](./limit%20testing/) contains some of these extreme cases that were tested on this model. 
 3. **Use of Retrieval-Augmented Generation (RAG):**  The LLM just uses it's pretrained knowledge. For basic first-aid scenarios this is okay. However, for rare cases such as burns on sensitive body parts, the LLM might hallucinate. If Gemini ever hallucinates the user may use the incorrect treatment. To prevent this, we can implement RAG so that we can provide articles from sources such as the Mayo Clinic for Gemini to reference before providing an output. 
 4. **Streamlit Latency:** Since the app was hosted on Streamlit's free-tier Community Cloud, it could shut down after a period of inactivity, resulting in a cold start and increased initial latency. A potential solution without additional cost is to periodically send requests to keep the app in a hot state, while also caching the model to reduce startup time.
-
-
 
 ## 4.3. Contributing to the Repo
 
