@@ -197,6 +197,91 @@ Another major limitation is a lack of spatial awareness. The LLM is only fed the
 
 
 
+## 4.3. Contributing to the Repo
+
+If you are interested in addressing these limitations or adding additional features to this repo, please follow these steps:
+
+1. **Fork and Clone the Repo:**
+   Fork this repository to your GitHub account, then clone your fork locally:
+
+   ```bash
+   git clone <your-fork-url>
+   cd BurnSightAI
+   ```
+
+2. **Create a Virtual Environment:**
+   Create a virtual environment to isolate the project's dependencies:
+
+   ```bash
+   python -m venv .venv
+   ```
+
+   Activate the virtual environment:
+
+   **Windows:**
+
+   ```bash
+   .venv\Scripts\activate
+   ```
+
+   **macOS/Linux:**
+
+   ```bash
+   source .venv/bin/activate
+   ```
+
+3. **Install Dependencies:**
+   Install the required Python packages:
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Create the `.env` File:**
+   Create a `.env` file in the root directory of the repository and add the required API keys:
+
+   ```env
+   GEMINI_API_KEY=your_api_key_here
+   ```
+
+   **Do not commit the `.env` file to GitHub.** Make sure `.env` is included in your `.gitignore`.
+
+5. **Test the Application Locally:**
+   Start the Streamlit application:
+
+   ```bash
+   streamlit run app.py
+   ```
+
+   Open the local URL provided in the terminal and test the application's existing functionality. Verify that your changes work as expected and do not introduce issues with existing features.
+
+6. **Create a New Branch:**
+   Create a separate branch for your changes:
+
+   ```bash
+   git checkout -b <branch-name>
+   ```
+
+7. **Make Your Changes:**
+   Implement your feature or fix while following the existing project structure and coding conventions.
+
+8. **Test Your Changes Locally:**
+   Run the application again and test the specific functionality you modified. If applicable, test different inputs and edge cases to ensure your changes work correctly.
+
+9. **Commit and Push Your Changes:**
+   Commit your changes and push the branch to your fork:
+
+   ```bash
+   git add .
+   git commit -m "Describe your changes"
+   git push origin <branch-name>
+   ```
+
+10. **Create a Pull Request:**
+    Open a pull request from your branch to the original repository. Include a brief description of the changes you made, why they were necessary, and any relevant testing or considerations.
+
+
+
 
 
 

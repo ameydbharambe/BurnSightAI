@@ -10,7 +10,10 @@ load_dotenv()
 
 class BurnSightChat:
     def __init__(self):
-        self.api_key = st.secrets["GEMINI_API_KEY"]
+        try:
+            self.api_key = st.secrets["GEMINI_API_KEY"]
+        except (st.errors.StreamlitSecretNotFoundError, KeyError):
+            self.api_key = os.getenv("GEMINI_API_KEY")
         self.client = genai.Client(api_key=self.api_key)
         self.config = types.GenerateContentConfig(temperature=0.1)
         self.chat = None
